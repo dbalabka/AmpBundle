@@ -1,0 +1,18 @@
+{
+    "name": "torinaki/aerys-bundle",
+    "description": "Aerys support for Symfony",
+    "type": "symfony-bundle",
+    "require": {
+        "symfony/http-kernel": "~3.2",
+        "symfony/dependency-injection": "~3.2",
+        "symfony/config": "~3.2",
+        "amphp/aerys": "dev-master"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Dmitry Balabka",
+            "email": "dmitry.balabka@gmail.com"
+        }
+    ]
+}
