@@ -1,6 +1,6 @@
 {
-    "name": "torinaki/aerys-bundle",
-    "description": "Aerys support for Symfony",
+    "name": "torinaki/amp-bundle",
+    "description": "Amp support for Symfony",
     "type": "symfony-bundle",
     "require": {
         "symfony/http-kernel": "^3.2",
