@@ -3,9 +3,9 @@
     "description": "Amp support for Symfony",
     "type": "symfony-bundle",
     "require": {
-        "symfony/http-kernel": "^3.2",
-        "symfony/dependency-injection": "^3.2",
-        "symfony/config": "^3.2",
+        "symfony/http-kernel": "^3.4",
+        "symfony/dependency-injection": "^3.4",
+        "symfony/config": "^3.4",
         "amphp/aerys": "^0.7"
     },
     "license": "MIT",

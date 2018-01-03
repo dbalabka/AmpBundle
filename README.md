@@ -110,3 +110,7 @@ class AcmeController
 ```bash
 
 ```
+
+## Run Apache or Nginx server
+You don't need to change anything in your application action bundle installation
+to use regular HTTP server. 

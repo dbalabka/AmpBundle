@@ -1,0 +1,6 @@
+{
+  "bundles": {
+    "Amp\\AmpBundle\\AmpBundle": ["all"]
+  },
+  "aliases": ["amp-bundle"]
+}

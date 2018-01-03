@@ -4,6 +4,6 @@ namespace Amp\AmpBundle;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
-class AerysBundle extends Bundle
+class AmpBundle extends Bundle
 {
 }
