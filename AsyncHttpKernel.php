@@ -1,14 +1,6 @@
 <?php
-/*
- * This file is part of the OpCart software.
- *
- * (c) 2017, OpticsPlanet, Inc
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
 
-namespace Aerys\AerysBundle;
+namespace Amp\AmpBundle;
 
 use function Amp\call;
 use Symfony\Component\HttpKernel\Controller\ArgumentResolver;
@@ -25,7 +17,7 @@ use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 use Symfony\Component\HttpKernel\Event\PostResponseEvent;
-use Symfony\Component\HttpFoundation\Exception\ConflictingHeadersException;
+use Symfony\Component\HttpFoundation\Exception\RequestExceptionInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
@@ -34,7 +26,13 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\HttpKernel\TerminableInterface;
 
-class AsyncHttpKernel  implements HttpKernelInterface, TerminableInterface
+/**
+ * HttpKernel notifies events to convert a Request object to a Response one.
+ *
+ * This class if copy of original Symfony [HttpKernel](https://github.com/symfony/symfony/blob/v3.4.2/src/Symfony/Component/HttpKernel/HttpKernel.php)
+ * with some changes to support yield bubbling.
+ */
+class AsyncHttpKernel implements HttpKernelInterface, TerminableInterface
 {
     protected $dispatcher;
     protected $resolver;
@@ -65,8 +63,8 @@ class AsyncHttpKernel  implements HttpKernelInterface, TerminableInterface
         try {
             return $this->handleRaw($request, $type);
         } catch (\Exception $e) {
-            if ($e instanceof ConflictingHeadersException) {
-                $e = new BadRequestHttpException('The request headers contain conflicting information regarding the origin of this request.', $e);
+            if ($e instanceof RequestExceptionInterface) {
+                $e = new BadRequestHttpException($e->getMessage(), $e);
             }
             if (false === $catch) {
                 $this->finishRequest($request, $type);
@@ -88,13 +86,14 @@ class AsyncHttpKernel  implements HttpKernelInterface, TerminableInterface
 
     /**
      * @throws \LogicException If the request stack is empty
+     * @throws \Exception
      *
      * @internal
      */
-    public function terminateWithException(\Exception $exception)
+    public function terminateWithException(\Exception $exception, Request $request = null)
     {
-        if (!$request = $this->requestStack->getMasterRequest()) {
-            throw new \LogicException('Request stack is empty', 0, $exception);
+        if (!$request = $request ?: $this->requestStack->getMasterRequest()) {
+            throw $exception;
         }
 
         $response = $this->handleException($exception, $request, self::MASTER_REQUEST);
@@ -240,10 +239,12 @@ class AsyncHttpKernel  implements HttpKernelInterface, TerminableInterface
 
         // the developer asked for a specific status code
         if ($response->headers->has('X-Status-Code')) {
+            @trigger_error(sprintf('Using the X-Status-Code header is deprecated since version 3.3 and will be removed in 4.0. Use %s::allowCustomResponseCode() instead.', GetResponseForExceptionEvent::class), E_USER_DEPRECATED);
+
             $response->setStatusCode($response->headers->get('X-Status-Code'));
 
             $response->headers->remove('X-Status-Code');
-        } elseif (!$response->isClientError() && !$response->isServerError() && !$response->isRedirect()) {
+        } elseif (!$event->isAllowingCustomResponseCode() && !$response->isClientError() && !$response->isServerError() && !$response->isRedirect()) {
             // ensure that we actually have an error response
             if ($e instanceof HttpExceptionInterface) {
                 // keep the HTTP status code and headers

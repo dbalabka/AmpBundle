@@ -3,10 +3,10 @@
     "description": "Aerys support for Symfony",
     "type": "symfony-bundle",
     "require": {
-        "symfony/http-kernel": "~3.2",
-        "symfony/dependency-injection": "~3.2",
-        "symfony/config": "~3.2",
-        "amphp/aerys": "dev-master"
+        "symfony/http-kernel": "^3.2",
+        "symfony/dependency-injection": "^3.2",
+        "symfony/config": "^3.2",
+        "amphp/aerys": "^0.7"
     },
     "license": "MIT",
     "authors": [
@@ -16,9 +16,12 @@
         }
     ],
     "autoload": {
-        "psr-4": { "Aerys\\AerysBundle\\": "" },
+        "psr-4": { "Amp\\AmpBundle\\": "" },
         "exclude-from-classmap": [
             "/Tests/"
         ]
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^6.5"
     }
 }

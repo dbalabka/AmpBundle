@@ -1,6 +1,6 @@
 <?php
 
-namespace Aerys\AerysBundle;
+namespace Amp\AmpBundle;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
