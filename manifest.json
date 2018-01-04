@@ -6,6 +6,5 @@
     "server.php.dist": "%CONFIG_DIR%/server.php",
     "server_dev.php.dist": "%CONFIG_DIR%/server_dev.php"
   },
-  "aliases": ["amp-bundle"],
-  "post-install-output": "post-install.txt"
+  "aliases": ["amp-bundle"]
 }
