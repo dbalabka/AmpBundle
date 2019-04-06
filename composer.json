@@ -3,10 +3,13 @@
     "description": "Amp support for Symfony",
     "type": "symfony-bundle",
     "require": {
+        "php": "^7.1",
         "symfony/http-kernel": "^3.4",
         "symfony/dependency-injection": "^3.4",
         "symfony/config": "^3.4",
-        "amphp/aerys": "^0.7"
+        "amphp/http-server": "^1.0",
+        "amphp/amp": "^2.1",
+        "symfony/cache": "^3.4"
     },
     "license": "MIT",
     "authors": [
@@ -16,12 +19,27 @@
         }
     ],
     "autoload": {
-        "psr-4": { "Amp\\AmpBundle\\": "" },
-        "exclude-from-classmap": [
-            "/Tests/"
-        ]
+        "psr-4": { "Amp\\AmpBundle\\": "src/" }
+    },
+    "autoload-dev": {
+        "psr-4": { "Amp\\AmpBundle\\Tests\\": "tests/" }
     },
     "require-dev": {
-        "phpunit/phpunit": "^6.5"
+        "phpunit/phpunit": "^6.5",
+        "ext-iconv": "*",
+        "symfony/console": "^3.4",
+        "symfony/framework-bundle": "^3.4",
+        "symfony/lts": "^3",
+        "symfony/web-server-bundle": "^3.4",
+        "symfony/yaml": "^3.4",
+        "symfony/dotenv": "^3.4",
+        "amphp/artax": "^3.0",
+        "amphp/phpunit-util": "dev-master"
+    },
+    "scripts": {
+        "auto-scripts": {
+            "cache:clear": "symfony-cmd",
+            "assets:install %PUBLIC_DIR%": "symfony-cmd"
+        }
     }
 }

@@ -1,0 +1,49 @@
+<?xml version="1.0" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <services>
+
+        <service id="http_kernel_async" class="Amp\AmpBundle\AsyncHttpKernel" public="true">
+            <argument type="service" id="event_dispatcher" />
+            <argument type="service" id="controller_resolver" />
+            <argument type="service" id="request_stack" />
+            <argument type="service" id="argument_resolver" />
+        </service>
+
+        <service id="amp.server_config" class="Amp\AmpBundle\Service\ServerConfigService">
+            <argument>%kernel.cache_dir%</argument>
+        </service>
+
+        <service id="amp.server_command" class="Amp\AmpBundle\Command\ServerRunCommand">
+            <argument id="amp.default_loop_callback" type="service"/>
+            <tag name="console.command"/>
+        </service>
+
+        <service id="amp.default_loop_callback" class="Amp\AmpBundle\DefaultLoopCallback">
+            <argument id="amp.http_server" type="service"/>
+        </service>
+
+        <service id="amp.http_server_factory" class="Amp\AmpBundle\HttpServerFactory">
+        </service>
+
+        <service id="amp.request_handler" class="Amp\AmpBundle\RequestHandler">
+            <argument id="http_kernel_async" type="service"/>
+        </service>
+
+        <service id="amp.http_server_options" class="Amp\Http\Server\Options">
+
+        </service>
+
+        <service id="amp.http_server" class="Amp\Http\Server\Server">
+            <factory service="amp.http_server_factory" method="createServer"/>
+            <argument>%amp.sockets%</argument>
+            <argument type="service" id="amp.request_handler"/>
+            <argument type="service" id="logger"/>
+            <argument type="service" id="amp.http_server_options"/>
+        </service>
+
+    </services>
+</container>

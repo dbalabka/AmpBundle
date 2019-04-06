@@ -3,6 +3,8 @@
 namespace Amp\AmpBundle;
 
 use function Amp\call;
+use Amp\Coroutine;
+use Amp\Promise;
 use Symfony\Component\HttpKernel\Controller\ArgumentResolver;
 use Symfony\Component\HttpKernel\Controller\ArgumentResolverInterface;
 use Symfony\Component\HttpKernel\Controller\ControllerResolverInterface;
@@ -61,7 +63,8 @@ class AsyncHttpKernel implements HttpKernelInterface, TerminableInterface
         $request->headers->set('X-Php-Ob-Level', ob_get_level());
 
         try {
-            return $this->handleRaw($request, $type);
+            $result = yield from $this->handleRaw($request, $type);
+            return $result;
         } catch (\Exception $e) {
             if ($e instanceof RequestExceptionInterface) {
                 $e = new BadRequestHttpException($e->getMessage(), $e);
@@ -147,7 +150,19 @@ class AsyncHttpKernel implements HttpKernelInterface, TerminableInterface
         $arguments = $event->getArguments();
 
         // call controller
-        $response = yield call($controller, ...$arguments);
+//        try {
+            $response = $controller(...$arguments);
+//        } catch (\Exception $e) {
+//            throw $e;
+//        }
+
+        if ($response instanceof \Generator) {
+            $response = yield new Coroutine($response);
+        }
+
+        if ($response instanceof Promise) {
+            $response = yield $response;
+        }
 
         // view
         if (!$response instanceof Response) {
