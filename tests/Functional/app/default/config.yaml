@@ -1,0 +1,27 @@
+parameters:
+    amp.sockets:
+        - 127.0.0.1:8001
+
+amp: ~
+
+framework:
+    test: true
+    router:
+        strict_requirements: true
+        resource: ./default/routes.yaml
+
+services:
+    _defaults:
+        autowire: true      # Automatically injects dependencies in your services.
+        autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+        public: false       # Allows optimizing the container by removing unused services; this also means
+
+    Amp\AmpBundle\Tests\Functional\App\Controller\:
+        resource: '../Controller'
+        tags: ['controller.service_arguments']
+
+#    logger: { class: Psr\Log\NullLogger }
+    amp.default_loop_callback:
+        class: Amp\AmpBundle\Tests\Functional\DefaultLoopCallbackTestDecorator
+        arguments:
+            - '@amp.http_server'

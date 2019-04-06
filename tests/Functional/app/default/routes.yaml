@@ -1,0 +1,4 @@
+home:
+    path:     /
+    controller: Amp\AmpBundle\Tests\Functional\App\Controller\IndexController::index
+    methods: GET

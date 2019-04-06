@@ -3,8 +3,7 @@
     "Amp\\AmpBundle\\AmpBundle": ["all"]
   },
   "copy-from-package": {
-    "server.php.dist": "%CONFIG_DIR%/server.php",
-    "server_dev.php.dist": "%CONFIG_DIR%/server_dev.php"
+    "server.php": "%CONFIG_DIR%/server.php"
   },
   "aliases": ["amp-bundle"]
 }

@@ -1,0 +1,13 @@
+#parameters:
+#    kernel:
+#        secret: TEST_SECRET
+#
+#framework:
+#    secret: secret
+#
+#services:
+#    logger: { class: Psr\Log\NullLogger }
+#    amp.default_loop_callback:
+#        class: Amp\AmpBundle\Tests\Functional\DefaultLoopCallbackTestDecorator
+#        arguments:
+#            - '@amp.http_server'
